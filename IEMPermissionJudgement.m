@@ -76,4 +76,5 @@
     return object.intValue == 1 ? YES : NO;
 }
 
+
 @end
