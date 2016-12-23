@@ -1,0 +1,4 @@
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/HexColors" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/CocoaAsyncSocket" "${PODS_ROOT}/Headers/Public/FBRetainCycleDetector" "${PODS_ROOT}/Headers/Public/HappyDNS" "${PODS_ROOT}/Headers/Public/HexColors" "${PODS_ROOT}/Headers/Public/MLeaksFinder" "${PODS_ROOT}/Headers/Public/PLPlayerKit" "${PODS_ROOT}/Headers/Public/SDVersion" "${PODS_ROOT}/Headers/Public/TZImagePickerController" "${PODS_ROOT}/Headers/Public/WMPageController" "${PODS_ROOT}/Headers/Public/pili-ffmpeg" "${PODS_ROOT}/Headers/Public/pili-librtmp"
+PODS_ROOT = ${SRCROOT}
+SKIP_INSTALL = YES
