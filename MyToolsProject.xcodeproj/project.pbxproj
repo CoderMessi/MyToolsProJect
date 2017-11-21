@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		32801202A11CB8CE7FD46FE7 /* libPods-MyToolsProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA6FCAC817968285C96C0A08 /* libPods-MyToolsProject.a */; };
+		0E344782694A9C2B773C1799 /* libPods-MyToolsProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FF02BF6EA81D52305D6F91 /* libPods-MyToolsProject.a */; };
 		710808271D265D460090DB43 /* MyPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 710808261D265D460090DB43 /* MyPageViewController.m */; };
 		710B95141D24FF4000E36C78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 710B95131D24FF4000E36C78 /* main.m */; };
 		710B95171D24FF4000E36C78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 710B95161D24FF4000E36C78 /* AppDelegate.m */; };
@@ -26,7 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		19D3A71B359E9BA20BD46323 /* Pods-MyToolsProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyToolsProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject.release.xcconfig"; sourceTree = "<group>"; };
+		4E9055831D32C77375984480 /* Pods-MyToolsProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyToolsProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject.release.xcconfig"; sourceTree = "<group>"; };
+		5B79185ED958C8DF81540B28 /* Pods-MyToolsProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyToolsProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject.debug.xcconfig"; sourceTree = "<group>"; };
 		710808251D265D460090DB43 /* MyPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyPageViewController.h; path = ../MyToolsProject/MyPageViewController.h; sourceTree = "<group>"; };
 		710808261D265D460090DB43 /* MyPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyPageViewController.m; path = ../MyToolsProject/MyPageViewController.m; sourceTree = "<group>"; };
 		710B950F1D24FF4000E36C78 /* MyToolsProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyToolsProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,8 +58,7 @@
 		71F328EA1D3F5FAC00B60619 /* MyPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPlayerViewController.m; sourceTree = "<group>"; };
 		71F328F21D406EF300B60619 /* BluetoothViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluetoothViewController.h; sourceTree = "<group>"; };
 		71F328F31D406EF300B60619 /* BluetoothViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BluetoothViewController.m; sourceTree = "<group>"; };
-		CE76CF4A835721D8F45B75AA /* Pods-MyToolsProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyToolsProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject.debug.xcconfig"; sourceTree = "<group>"; };
-		FA6FCAC817968285C96C0A08 /* libPods-MyToolsProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyToolsProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92FF02BF6EA81D52305D6F91 /* libPods-MyToolsProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyToolsProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,13 +66,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32801202A11CB8CE7FD46FE7 /* libPods-MyToolsProject.a in Frameworks */,
+				0E344782694A9C2B773C1799 /* libPods-MyToolsProject.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20D10AB4945E494A16B9D92E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5B79185ED958C8DF81540B28 /* Pods-MyToolsProject.debug.xcconfig */,
+				4E9055831D32C77375984480 /* Pods-MyToolsProject.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		3B7FBF4FB92AA98A42EF64F7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92FF02BF6EA81D52305D6F91 /* libPods-MyToolsProject.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		710B95061D24FF4000E36C78 = {
 			isa = PBXGroup;
 			children = (
@@ -86,8 +103,8 @@
 				710B95291D25036600E36C78 /* BaseNetwork */,
 				710B95111D24FF4000E36C78 /* MyToolsProject */,
 				710B95101D24FF4000E36C78 /* Products */,
-				EA427BC3C9CABBBA523C799A /* Pods */,
-				78583E3BEC3D9A5FF803910E /* Frameworks */,
+				20D10AB4945E494A16B9D92E /* Pods */,
+				3B7FBF4FB92AA98A42EF64F7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,9 +123,9 @@
 				710B95161D24FF4000E36C78 /* AppDelegate.m */,
 				710B95181D24FF4000E36C78 /* ViewController.h */,
 				710B95191D24FF4000E36C78 /* ViewController.m */,
-				710B951B1D24FF4000E36C78 /* Main.storyboard */,
 				710B951E1D24FF4000E36C78 /* Assets.xcassets */,
 				710B95201D24FF4000E36C78 /* LaunchScreen.storyboard */,
+				710B951B1D24FF4000E36C78 /* Main.storyboard */,
 				710B95231D24FF4000E36C78 /* Info.plist */,
 				710B95121D24FF4000E36C78 /* Supporting Files */,
 			);
@@ -200,23 +217,6 @@
 			path = Bluetooth;
 			sourceTree = "<group>";
 		};
-		78583E3BEC3D9A5FF803910E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				FA6FCAC817968285C96C0A08 /* libPods-MyToolsProject.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EA427BC3C9CABBBA523C799A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CE76CF4A835721D8F45B75AA /* Pods-MyToolsProject.debug.xcconfig */,
-				19D3A71B359E9BA20BD46323 /* Pods-MyToolsProject.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -224,12 +224,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 710B95261D24FF4000E36C78 /* Build configuration list for PBXNativeTarget "MyToolsProject" */;
 			buildPhases = (
-				FEBD9E50C0CFE238E16F3427 /* Check Pods Manifest.lock */,
+				8ECABDB5CB0625BF760183D1 /* 📦 Check Pods Manifest.lock */,
 				710B950B1D24FF4000E36C78 /* Sources */,
 				710B950C1D24FF4000E36C78 /* Frameworks */,
 				710B950D1D24FF4000E36C78 /* Resources */,
-				61F244347B4A1092DD7412DF /* Embed Pods Frameworks */,
-				E496E4EDC501662CAE165308 /* Copy Pods Resources */,
+				B7A7F5FE38B1F56725A67BA5 /* 📦 Embed Pods Frameworks */,
+				51EB3F9967299AAFDC669E8F /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -288,29 +288,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		61F244347B4A1092DD7412DF /* Embed Pods Frameworks */ = {
+		51EB3F9967299AAFDC669E8F /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E496E4EDC501662CAE165308 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,19 +303,34 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FEBD9E50C0CFE238E16F3427 /* Check Pods Manifest.lock */ = {
+		8ECABDB5CB0625BF760183D1 /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B7A7F5FE38B1F56725A67BA5 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyToolsProject/Pods-MyToolsProject-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -465,7 +465,7 @@
 		};
 		710B95271D24FF4000E36C78 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE76CF4A835721D8F45B75AA /* Pods-MyToolsProject.debug.xcconfig */;
+			baseConfigurationReference = 5B79185ED958C8DF81540B28 /* Pods-MyToolsProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -489,7 +489,7 @@
 		};
 		710B95281D24FF4000E36C78 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19D3A71B359E9BA20BD46323 /* Pods-MyToolsProject.release.xcconfig */;
+			baseConfigurationReference = 4E9055831D32C77375984480 /* Pods-MyToolsProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

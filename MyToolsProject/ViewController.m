@@ -76,7 +76,8 @@
             if (success) {
                 NSLog(@">>>success!");
             } else {
-                NSLog(@">>>error!");
+                
+                NSLog(@">>>error!>>>%@", error.userInfo);
             }
         }];
     }
@@ -145,7 +146,7 @@
 
 #pragma mark - touch event
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    [self testFingerPrint];
+    [self testScanCode];
     
     
 //    [self getBatteryQuantity];
@@ -153,12 +154,12 @@
 //    [self getTotalDiskSize];
 //    [self getAvailableDiskSize];
     
-    TZImagePickerController *imagePicker = [[TZImagePickerController alloc] initWithMaxImagesCount:10 delegate:self];
-    
-    [imagePicker setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-        
-    }];
-    [self presentViewController:imagePicker animated:YES completion:nil];
+//    TZImagePickerController *imagePicker = [[TZImagePickerController alloc] initWithMaxImagesCount:10 delegate:self];
+//
+//    [imagePicker setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+//
+//    }];
+//    [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
 - (void)testScanCode {

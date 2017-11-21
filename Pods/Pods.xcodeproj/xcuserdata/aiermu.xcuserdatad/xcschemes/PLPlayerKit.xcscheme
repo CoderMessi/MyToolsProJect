@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'EAE2C46B25EFACF940609823'
+               BlueprintIdentifier = 'B4943715F609162F1EEAB93245DC66FB'
                BlueprintName = 'PLPlayerKit'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libPLPlayerKit.a'>
