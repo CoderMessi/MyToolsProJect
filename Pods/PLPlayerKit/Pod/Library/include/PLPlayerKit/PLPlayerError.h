@@ -14,11 +14,12 @@ typedef NS_ENUM(NSInteger, PLPlayerError) {
     // PLPlayer error
     PLPlayerErrorUnknow = 0,  // "Unknow error"
     
+    // Input error
     PLPlayerErrorEOF = -1, // End of file
     
     PLPlayerErrorURLNotSupported = -2000,  // "URL to play is not supported."
     
-    PLPlayerErrorAudioSessionNotSupportToPlay = -2001,   // "AVAudioSession's category doesn't support audio play."
+    PLPlayerErrorAudioSessionNotSupportToPlay = -2001,  // "AVAudioSession's category doesn't support audio play."
     
     PLPlayerErrorAudioFormatNotSupport = -2002, // "RTMP/FLV live audio only support AAC."
     
@@ -29,6 +30,19 @@ typedef NS_ENUM(NSInteger, PLPlayerError) {
     PLPlayerErrorInputTimeout = -2100, // "Input read data timeout."
     
     PLPLayerErrorInputReadError = -2101, // "Input read data error."
+    
+    // Codec error
+    PLPlayerErrorCodecInitFailed = -2201, // "codec init failed."
+    
+    PLPlayerErrorHWCodecInitFailed = -2202, // "hardware codec init faile."
+    
+    PLPlayerErrorDecodeFailed = -2203,   // "decode failed."
+    
+    PLPlayerErrorHWDecodeFailed = -2204, // "hardware decode failed."
+    
+    PLPlayerErrorDecodeNoFrame = -2205, // "decode no frame."
+    
+    PLPlayerErrorVideoSizeChange = -2206, // "video size change, should stop and replay."
     
     // RTMP error
     PLPlayerErrorRTMPErrorUnknowOption = -999, // "Unknown option %s"
@@ -69,6 +83,8 @@ typedef NS_ENUM(NSInteger, PLPlayerError) {
     PLPlayerErrorRTMPErrorTLSConnectFailed = -1200,	//	"TLS_Connect failed"
     
     PLPlayerErrorRTMPErrorNoSSLOrTLSSupport = -1201,	//	"No SSL/TLS support"
+    
+    PLPlayerErrorHTTPErrorHTTPConnectFailed = -1202, // "HTTP connect failed"
 };
 
 

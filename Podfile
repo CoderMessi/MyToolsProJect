@@ -12,5 +12,14 @@ pod 'CocoaAsyncSocket'
 pod 'PLPlayerKit'
 pod 'MLeaksFinder', '0.2.0'
 pod 'TZImagePickerController', '1.6.8'
+
+# 数据库及加密
+pod 'FMDB/SQLCipher', '2.7.2'
+pod 'FMDBMigrationManager', '1.4.1'
+pod 'MD5Digest', '1.1.0'
+
+# 模型转换
+pod 'Mantle', '2.0.7'
+pod 'MJExtension', '3.0.10'
 end
 

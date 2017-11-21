@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WMMenuView.h"
 #import "WMScrollView.h"
+
 @class WMPageController;
 
 /*
@@ -19,11 +20,12 @@
     and continue to grow back after a while.
     If recieved too much times, the cache policy will stay at 'LowMemory' and don't grow back any more.
  */
-typedef NS_ENUM(NSUInteger, WMPageControllerCachePolicy) {
-    WMPageControllerCachePolicyNoLimit   = 0,  // No limit
-    WMPageControllerCachePolicyLowMemory = 1,  // Low Memory but may block when scroll
-    WMPageControllerCachePolicyBalanced  = 3,  // Balanced ↑ and ↓
-    WMPageControllerCachePolicyHigh      = 5   // High
+typedef NS_ENUM(NSInteger, WMPageControllerCachePolicy) {
+    WMPageControllerCachePolicyDisabled   = -1,  // Disable Cache
+    WMPageControllerCachePolicyNoLimit    = 0,   // No limit
+    WMPageControllerCachePolicyLowMemory  = 1,   // Low Memory but may block when scroll
+    WMPageControllerCachePolicyBalanced   = 3,   // Balanced ↑ and ↓
+    WMPageControllerCachePolicyHigh       = 5    // High
 };
 
 typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
@@ -32,6 +34,9 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
     WMPageControllerPreloadPolicyNear      = 2  // Pre-load 2 controllers near the current.
 };
 
+NS_ASSUME_NONNULL_BEGIN
+extern NSString *const WMControllerDidAddToSuperViewNotification;
+extern NSString *const WMControllerDidFullyDisplayedNotification;
 @protocol WMPageControllerDataSource <NSObject>
 @optional
 
@@ -63,6 +68,24 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  *  @return A `NSString` value to show at the top of `WMPageController`.
  */
 - (NSString *)pageController:(WMPageController *)pageController titleAtIndex:(NSInteger)index;
+
+/**
+ Implement this datasource method, in order to customize your own contentView's frame
+
+ @param pageController The container controller
+ @param contentView The contentView, each is the superview of the child controllers
+ @return The frame of the contentView
+ */
+- (CGRect)pageController:(WMPageController *)pageController preferredFrameForContentView:(WMScrollView *)contentView;
+
+/**
+ Implement this datasource method, in order to customize your own menuView's frame
+ 
+ @param pageController The container controller
+ @param menuView The menuView
+ @return The frame of the menuView
+ */
+- (CGRect)pageController:(WMPageController *)pageController preferredFrameForMenuView:(WMMenuView *)menuView;
 
 @end
 
@@ -117,20 +140,20 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  *  values keys 属性可以用于初始化控制器的时候为控制器传值(利用 KVC 来设置)
     使用时请确保 key 与控制器的属性名字一致！！(例如：控制器有需要设置的属性 type，那么 keys 所放的就是字符串 @"type")
  */
-@property (nonatomic, strong) NSMutableArray<id> *values;
-@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
+@property (nonatomic, nullable, strong) NSMutableArray<id> *values;
+@property (nonatomic, nullable, strong) NSMutableArray<NSString *> *keys;
 
 /**
  *  各个控制器的 class, 例如:[UITableViewController class]
  *  Each controller's class, example:[UITableViewController class]
  */
-@property (nonatomic, copy) NSArray<Class> *viewControllerClasses;
+@property (nonatomic, nullable, copy) NSArray<Class> *viewControllerClasses;
 
 /**
  *  各个控制器标题
  *  Titles of view controllers in page controller.
  */
-@property (nonatomic, copy) NSArray<NSString *> *titles;
+@property (nonatomic, nullable, copy) NSArray<NSString *> *titles;
 @property (nonatomic, strong, readonly) UIViewController *currentViewController;
 
 /**
@@ -180,13 +203,7 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  *  标题的字体名字
  *  The name of title's font
  */
-@property (nonatomic, copy) NSString *titleFontName;
-
-/**
- *  导航栏高度
- *  The menu view's height
- */
-@property (nonatomic, assign) CGFloat menuHeight;
+@property (nonatomic, nullable, copy) NSString *titleFontName;
 
 /**
  *  每个 MenuItem 的宽度
@@ -198,13 +215,7 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  *  各个 MenuItem 的宽度，可不等，数组内为 NSNumber.
  *  Each item's width, when they are not all the same, use this property, Put `NSNumber` in this array.
  */
-@property (nonatomic, copy) NSArray<NSNumber *> *itemsWidths;
-
-/**
- *  导航栏背景色
- *  The background color of menu view
- */
-@property (nonatomic, strong) UIColor *menuBGColor;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *itemsWidths;
 
 /**
  *  Menu view 的样式，默认为无下划线
@@ -218,12 +229,12 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  *  进度条的颜色，默认和选中颜色一致(如果 style 为 Default，则该属性无用)
  *  The progress's color,the default color is same with `titleColorSelected`.If you want to have a different color, set this property.
  */
-@property (nonatomic, strong) UIColor *progressColor;
+@property (nonatomic, nullable, strong) UIColor *progressColor;
 
 /**
  *  定制进度条在各个 item 下的宽度
  */
-@property (nonatomic, strong) NSArray *progressViewWidths;
+@property (nonatomic, nullable, strong) NSArray *progressViewWidths;
 
 /// 定制进度条，若每个进度条长度相同，可设置该属性
 @property (nonatomic, assign) CGFloat progressWidth;
@@ -269,14 +280,11 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
 /** 下划线进度条的高度 */
 @property (nonatomic, assign) CGFloat progressHeight;
 
-/** WMPageController View' frame */
-@property (nonatomic, assign) CGRect viewFrame;
-
 /**
  *  Menu view items' margin / make sure it's count is equal to (controllers' count + 1),default is 0
     顶部菜单栏各个 item 的间隙，因为包括头尾两端，所以确保它的数量等于控制器数量 + 1, 默认间隙为 0
  */
-@property (nonatomic, copy) NSArray<NSNumber *> *itemsMargins;
+@property (nonatomic, nullable, copy) NSArray<NSNumber *> *itemsMargins;
 
 /**
  *  set itemMargin if all margins are the same, default is 0
@@ -284,28 +292,20 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  */
 @property (nonatomic, assign) CGFloat itemMargin;
 
-/** 顶部 menuView 和 scrollView 之间的间隙 */
-@property (nonatomic, assign) CGFloat menuViewBottomSpace;
-
 /** progressView 到 menuView 底部的距离 */
 @property (nonatomic, assign) CGFloat progressViewBottomSpace;
 
 /** progressView's cornerRadius */
 @property (nonatomic, assign) CGFloat progressViewCornerRadius;
 /** 顶部导航栏 */
-@property (nonatomic, weak) WMMenuView *menuView;
+@property (nonatomic, nullable, weak) WMMenuView *menuView;
 
 /** 内部容器 */
-@property (nonatomic, weak) WMScrollView *scrollView;
+@property (nonatomic, nullable, weak) WMScrollView *scrollView;
 
 /** MenuView 内部视图与左右的间距 */
 @property (nonatomic, assign) CGFloat menuViewContentMargin;
 
-/**
- *  左滑时同时启用其他手势，比如系统左滑、sidemenu左滑。默认 NO
-    (会引起一个小问题，第一个和最后一个控制器会变得可以斜滑, 还未解决)
- */
-@property (assign, nonatomic) BOOL otherGestureRecognizerSimultaneously;
 /**
  *  构造方法，请使用该方法创建控制器. 或者实现数据源方法. /
  *  Init method，recommend to use this instead of `-init`. Or you can implement datasource by yourself.
@@ -323,6 +323,11 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  */
 - (void)reloadData;
 
+/**
+ Layout all views in WMPageController
+ @discussion This method will recall `-pageController:preferredFrameForContentView:` and `-pageContoller:preferredFrameForMenuView:`
+ */
+- (void)forceLayoutSubviews;
 /**
  *  Update designated item's title
     更新指定序号的控制器的标题
@@ -342,9 +347,13 @@ typedef NS_ENUM(NSUInteger, WMPageControllerPreloadPolicy) {
  */
 - (void)updateTitle:(NSString *)title andWidth:(CGFloat)width atIndex:(NSInteger)index;
 
+- (void)updateAttributeTitle:(NSAttributedString *)title atIndex:(NSInteger)index;
+
 /** 当 app 即将进入后台接收到的通知 */
 - (void)willResignActive:(NSNotification *)notification;
 /** 当 app 即将回到前台接收到的通知 */
 - (void)willEnterForeground:(NSNotification *)notification;
 
 @end
+
+NS_ASSUME_NONNULL_END

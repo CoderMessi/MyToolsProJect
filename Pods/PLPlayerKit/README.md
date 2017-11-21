@@ -4,26 +4,54 @@ PLPlayerKit 是一个适用于 iOS 的音视频播放器 SDK，可高度定制�
 
 功能特性
 
-- [x] RTMP 直播流播放
-- [x] HTTP-FLV 直播流播放
-- [x] HLS 播放
 - [x] 高可定制
-- [x] 音频播放
-- [x] RTMP 直播首屏秒开支持
-- [x] RTMP 直播累积延迟消除技术
+- [x] 直播累积延迟消除技术
+- [x] 支持首屏秒开
+- [x] 支持 RTMP 直播流播放
+- [x] 支持 HTTP-FLV 直播流播放
+- [x] 支持 HLS 播放
+- [x] 支持 HTTPS 播放
+- [x] 支持多种画面预览模式
+- [x] 支持画面旋转与镜像
+- [x] 支持播放器音量设置
+- [x] 支持纯音频播放
+- [x] 支持后台播放
+- [x] 支持使用 IP 地址的 URL 
+- [x] 支持软硬解自动切换
+- [x] 支持 H.265 格式播放
+- [x] 支持 HLS 七牛私有 DRM
+- [x] 支持点播倍速播放
+- [x] 支持点播 mp4 视频本地缓存播放
+- [x] 支持 SEI 数据回调
 
+## 说明
+
+从 **v3.0.0** 开始，SDK 全面升级为七牛完全自研的播放器内核，拥有更加优异的性能，升级内容如下：
+
+- [x] 新增倍数播放功能（0.5x，1x，2x，4x 等）
+- [x] 新增 mp4 本地缓存功能
+- [x] 新增 HLS 七牛私有 DRM 的支持 
+- [x] 新增 H.265 格式播放的支持
+- [x] 优化 CPU、内存和功耗
+- [x] 优化首开效果，首开速度有大幅提升
+- [x] 优化重连逻辑，不用销毁播放器，网络断开后内部自动重连
+- [x] 优化 mp4 点播，使用双 IO 技术更高效地播放 moov 在尾部的 mp4 文件
+- [x] 支持播放过程中变速不变调，可实现更平滑的追帧效果，更少的卡顿率
+- [x] 新增支持 SEI 数据回调，更多数据交互
 
 ## 内容摘要
 
 - [快速开始](#1-快速开始)
 	- [配置工程](#配置工程)
 	- [示例代码](#示例代码)
-- [关于 2.0 版本](#关于2.0版本)
+- [关于 3.0 版本](#关于3.0版本)
 - [版本历史](#版本历史)
 
 ## 快速开始
 
 ### 配置工程
+
+#### CocoaPods 导入
 
 - 配置你的 Podfile 文件，添加如下配置信息
 
@@ -43,20 +71,15 @@ pod install
 
 - Done! 运行你工程的 workspace
 
+#### 手动导入  
+
+- 将 Pod 目录下的所有文件加入到工程中；
+- 添加 HappyDNS 库，把 [链接](https://github.com/qiniu/happy-dns-objc) 中的 HappyDNS 目录下的所有文件加入到工程中  
+- Build Setting 下 Other Linker Flags 中添加 -ObjC
+- Build Phases 下 Link Binary With Libraries 中添加如图所示
+![](http://sdk-release.qnsdk.com/PLPLayerKit.jpg)
+
 ### 示例代码
-
-在 `AppDelegate.m` 中进行 SDK 初始化
-
-```Objective-C
-#import <PLPlayerKit/PLPlayerEnv.h>
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    [PLPlayerEnv initEnv];
-    // Override point for customization after application launch.
-    return YES;
-}
-```
 
 在需要的地方添加
 
@@ -75,7 +98,7 @@ PLPlayerOption *option = [PLPlayerOption defaultOption];
 [option setOptionValue:@2000 forKey:PLPlayerOptionKeyMaxL1BufferDuration];
 [option setOptionValue:@1000 forKey:PLPlayerOptionKeyMaxL2BufferDuration];
 [option setOptionValue:@(NO) forKey:PLPlayerOptionKeyVideoToolbox];
-[option setOptionValue:@(kPLLogNone) forKey:PLPlayerOptionKeyLogLevel];
+[option setOptionValue:@(kPLLogInfo) forKey:PLPlayerOptionKeyLogLevel];
 
 ```
 
@@ -119,10 +142,21 @@ self.player.delegate = self;
 - (void)player:(nonnull PLPlayer *)player statusDidChange:(PLPlayerStatus)state {
 	// 这里会返回流的各种状态，你可以根据状态做 UI 定制及各类其他业务操作
 	// 除了 Error 状态，其他状态都会回调这个方法
+  // 开始播放，当连接成功后，将收到第一个 PLPlayerStatusCaching 状态
+  // 第一帧渲染后，将收到第一个 PLPlayerStatusPlaying 状态
+  // 播放过程中出现卡顿时，将收到 PLPlayerStatusCaching 状态
+  // 卡顿结束后，将收到 PLPlayerStatusPlaying 状态
 }
 
 - (void)player:(nonnull PLPlayer *)player stoppedWithError:(nullable NSError *)error {
-	// 当发生错误时，会回调这个方法
+	// 当发生错误，停止播放时，会回调这个方法
+}
+
+- (void)player:(nonnull PLPlayer *)player codecError:(nonnull NSError *)error {
+  // 当解码器发生错误时，会回调这个方法
+  // 当 videotoolbox 硬解初始化或解码出错时
+  // error.code 值为 PLPlayerErrorHWCodecInitFailed/PLPlayerErrorHWDecodeFailed
+  // 播发器也将自动切换成软解，继续播放
 }
 ```
 
@@ -149,7 +183,76 @@ self.player.delegate = self;
 
 分辨可以检查是否可以播放以及当前 category 的设置是否可以后台播放。
 
+## 其它依赖库版本号
+- FFmpeg : v3.3.x
+- OpenSSL: OpenSSL_1_1_0f
+- Speex: v1.2.0
+
 ## 版本历史
+- 3.0.2 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-3.0.2.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-3.0.2.md))
+- 功能
+  - 加长 URL 设置长度
+- 缺陷
+  - 修复 iPhone X 模拟器崩溃问题
+  - 修复数据缓存回调总时长出错问题
+  - 修复截图功能无效问题
+  - 修复 OpenGL 崩溃问题
+  - 修复无法修改 playerView 的 bounds 属性的问题
+- 3.0.1 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-3.0.1.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-3.0.1.md))
+- 功能
+  - 新增 SEI 数据回调
+  - 新增播放格式预设置
+  - 新增同格式快速播放接口
+- 缺陷
+  - 修复播放器错误时收不到 error 状态回调的问题
+  - 修复某些 mp4 无法播放的问题
+  - 修复多次 stop 时 crash 的问题
+- 3.0.0 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-3.0.0.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-3.0.0.md))
+- 全面升级为七牛自研的播放器内核，拥有更优异的性能
+- 功能
+  - 新增 HLS 七牛私有 DRM 的支持
+  - 新增 H.265 格式的播放
+  - 新增点播倍速播放
+  - 新增点播 mp4 视频缓存播放
+- 优化
+  - 优化包体大小
+  - 优化 CPU、内存和功耗
+  - 优化直播模式下的追帧策略，效果更加平滑
+  - 优化重连逻辑，不用销毁播放器，网络断开后内部自动重连
+  - 优化 mp4 点播，使用双 IO 技术更高效地播放 moov 在尾部的 mp4 文件
+- 2.4.3 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-2.4.3.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-2.4.3.md))
+- 功能
+  - 新增流分辨率变化的通知
+  - 新增提供更多音视频信息的回调接口
+  - 新增首开耗时接口
+  - 增强 FFmpeg 点播硬解兼容性
+- 缺陷
+  - 修复 AVPlayer 点播 pause 状态切换时播放器状态异常的问题
+  - 修复 FFmpeg 点播纯音频流时 seek 失败的问题
+  - 修复硬解在某些场景下出现绿屏的问题
+- 2.4.2 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-2.4.2.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-2.4.2.md))
+- 缺陷
+  - 修复 AVPlayer 播放时调用 pause 和设置 frame 无效的问题
+  - 修复解码器释放时线程并发导致的偶发 crash
+- 2.4.1 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-2.4.1.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-2.4.1.md))
+- 功能
+  - 新增 probesize 参数配置
+  - 新增播放器初始化后更新 URL 的接口
+  - 新增 AVPlayer 点播的缓冲进度接口
+  - 增加 http header 中 referer 自定义接口
+- 缺陷
+  - 修复锁屏且屏幕黑后，播放没有声音的问题
+  - 修复播放器释放时偶发的 crash
+- 2.4.0 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-2.4.0.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-2.4.0.md))
+- 功能
+  - 新增 https 支持
+  - 新增文件播放
+  - 新增 speex, ogg 等音视频格式， avi, m4a 等封装格式支持。
+  - 新增 display aspect ratio 信息
+  - 新增 DNS 预解析接口
+  - 新增开播前封面图
+- 缺陷
+  - 修复一些偶发的 crash
 - 2.3.0 ([Release Notes](https://github.com/pili-engineering/PLPlayerKit/blob/master/ReleaseNotes/release-notes-2.3.0.md) && [API Diffs](https://github.com/pili-engineering/PLPlayerKit/blob/master/APIDiffs/api-diffs-2.3.0.md))
 - 功能
   - 新增直播流画面旋转模式

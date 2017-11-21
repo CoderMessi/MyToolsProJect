@@ -2,8 +2,8 @@
 //  PLPlayerOption.h
 //  PLPlayerKit
 //
-//  Created by WangSiyu on 2/24/16.
-//  Copyright © 2016 qgenius. All rights reserved.
+//  Created by 何昊宇 on 2017/5/15.
+//  Copyright © 2017年 Aaron. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -41,6 +41,28 @@ typedef enum : NSUInteger {
 } PLLogLevel;
 
 /**
+ 预设置播放器播放 URL 类型
+ */
+typedef enum : NSUInteger {
+    /**
+     * 未知类型
+     */
+    kPLPLAY_FORMAT_UnKnown,
+    /**
+     * M3U8 类型
+     */
+    kPLPLAY_FORMAT_M3U8,
+    /**
+     * MP4 类型
+     */
+    kPLPLAY_FORMAT_MP4,
+    /**
+     *  FLV 类型
+     */
+    kPLPLAY_FORMAT_FLV,
+} PLPlayFormat;
+
+/**
  @abstract 接收/发送数据包超时时间间隔所对应的键值，单位为 s ，默认配置为 10s
  
  @warning 建议设置正数。设置的值小于等于 0 时，表示禁用超时，播放卡住时，将无超时回调。
@@ -51,7 +73,7 @@ typedef enum : NSUInteger {
 extern NSString  * _Nonnull PLPlayerOptionKeyTimeoutIntervalForMediaPackets;
 
 /**
- @abstract 一级缓存大小，单位为 ms，默认为 1000ms，增大该值可以减小播放过程中的卡顿率，但会增大弱网环境的最大累积延迟
+ @abstract 一级缓存大小，单位为 ms，默认为 2000ms，增大该值可以减小播放过程中的卡顿率，但会增大弱网环境的最大累积延迟
  
  @discussion 该缓存存放的是网络层读取到的数据，为保证实时性，超过该缓存池大小的过期音频数据将被丢弃，视频将加速渲染追上音频
  
@@ -62,7 +84,7 @@ extern NSString  * _Nonnull PLPlayerOptionKeyTimeoutIntervalForMediaPackets;
 extern NSString  * _Nonnull PLPlayerOptionKeyMaxL1BufferDuration;
 
 /**
- @abstract 默认二级缓存大小，单位为 ms，默认为 1000ms，增大该值可以减小播放过程中的卡顿率，但会增大弱网环境的最大累积延迟
+ @abstract 默认二级缓存大小，单位为 ms，默认为 300ms，增大该值可以减小播放过程中的卡顿率，但会增大弱网环境的最大累积延迟
  
  @discussion 该缓存存放的是解码之后待渲染的数据，如果该缓存池满，则二级缓存将不再接收来自一级缓存的数据
  
@@ -110,7 +132,7 @@ extern NSString * _Nonnull PLPlayerOptionKeyDNSManager;
  @abstract 开启/关闭 HappyDNS 的 DNS 解析
  
  @discussion 默认开启
-
+ 
  @waring 该参数仅对 rtmp 与 flv 生效，值类型为 BOOL
  
  @since v2.3.0
@@ -118,15 +140,34 @@ extern NSString * _Nonnull PLPlayerOptionKeyDNSManager;
 extern NSString * _Nonnull PLPlayerOptionKeyHappyDNSEnable;
 
 /**
- @abstract 点播使用 ffmpeg 还是 AVPlayer
+ @abstract 视频缓存目录, 默认为 nil
  
- @discussion YES 表示使用 ffmpeg ，NO 表示使用 AVPlayer。默认为 NO。
+ @waring 该属性仅对点播 mp4 有效,当 PLPlayerOptionKeyVideoCacheFolderPath 有值时，默认关闭 DNS  解析
  
- @waring 该参数仅对点播生效，值类型为 BOOL
- 
- @since v2.3.0
+ @since v3.0.0
  */
-extern NSString * _Nonnull PLPlayerOptionKeyVODFFmpegEnable;
+extern NSString * _Nullable PLPlayerOptionKeyVideoCacheFolderPath;
+
+/**
+ @abstract 视频预设值播放 URL 格式类型
+ 
+ @discussion 该参数用于加快首开，提前告知播放器流类型，默认 kPLPLAY_FORMAT_UnKnown
+ 
+ @waring 取值范围: PLPlayFormat
+ 
+ @since v3.0.1
+ */
+extern NSString * _Nullable PLPlayerOptionKeyVideoPreferFormat;
+
+
+/**
+ SDK 设备 ID
+ 
+ @discussion 该参数用于标记 SDK 设备 ID, 默认为 UUID
+ 
+ @since v3.0.2
+ */
+extern NSString * _Nullable PLPlayerOptionKeySDKID;
 
 /**
  PLPlayer 的可选配置类，在初始化 PLPlayer 对象的时候传入其实例进行 PLPlayer 的可选项配置
@@ -137,8 +178,6 @@ extern NSString * _Nonnull PLPlayerOptionKeyVODFFmpegEnable;
 
 /**
  @abstract 使用默认配置生成一个 PLPlayerOption 对象
- 
- @discussion
  
  @return 生成的 PLPlayerOption 对象
  
@@ -186,5 +225,6 @@ extern NSString * _Nonnull PLPlayerOptionKeyVODFFmpegEnable;
  @since v1.0.0
  */
 - (nonnull NSDictionary *)dictionaryValue;
+
 
 @end

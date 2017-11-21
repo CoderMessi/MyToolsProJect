@@ -8,7 +8,7 @@
 
 #import "WMMenuItem.h"
 
-@interface WMMenuItem () {
+@implementation WMMenuItem {
     CGFloat _selectedRed, _selectedGreen, _selectedBlue, _selectedAlpha;
     CGFloat _normalRed, _normalGreen, _normalBlue, _normalAlpha;
     int     _sign;
@@ -16,9 +16,6 @@
     CGFloat _step;
     __weak CADisplayLink *_link;
 }
-@end
-
-@implementation WMMenuItem
 
 #pragma mark - Public Methods
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -28,6 +25,8 @@
         self.normalSize    = 15;
         self.selectedSize  = 18;
         self.numberOfLines = 0;
+        
+        [self setupGestureRecognizer];
     }
     return self;
 }
@@ -39,16 +38,22 @@
     return _speedFactor;
 }
 
-// 设置选中，隐式动画所在
-- (void)setSelected:(BOOL)selected {
-    if (self.selected == selected) { return; }
+- (void)setupGestureRecognizer {
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchUpInside:)];
+    [self addGestureRecognizer:tap];
+}
+
+- (void)setSelected:(BOOL)selected withAnimation:(BOOL)animation {
     _selected = selected;
+    if (!animation) {
+        self.rate = selected ? 1.0 : 0.0;
+        return;
+    }
     _sign = (selected == YES) ? 1 : -1;
-    _gap = (selected == YES) ? (1.0 - self.rate) : (self.rate - 0.0);
+    _gap  = (selected == YES) ? (1.0 - self.rate) : (self.rate - 0.0);
     _step = _gap / self.speedFactor;
     if (_link) {
         [_link invalidate];
-//        [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
     CADisplayLink *link = [CADisplayLink displayLinkWithTarget:self selector:@selector(rateChange)];
     [link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
@@ -56,7 +61,6 @@
 }
 
 - (void)rateChange {
-    
     if (_gap > 0.000001) {
         _gap -= _step;
         if (_gap < 0.0) {
@@ -69,11 +73,11 @@
         [_link invalidate];
         _link = nil;
     }
-    
 }
 
 // 设置rate,并刷新标题状态
 - (void)setRate:(CGFloat)rate {
+    if (rate < 0.0 || rate > 1.0) { return; }
     _rate = rate;
     CGFloat r = _normalRed + (_selectedRed - _normalRed) * rate;
     CGFloat g = _normalGreen + (_selectedGreen - _normalGreen) * rate;
@@ -83,16 +87,6 @@
     CGFloat minScale = self.normalSize / self.selectedSize;
     CGFloat trueScale = minScale + (1 - minScale)*rate;
     self.transform = CGAffineTransformMakeScale(trueScale, trueScale);
-}
-
-- (void)selectedItemWithoutAnimation {
-    self.rate = 1.0;
-    _selected = YES;
-}
-
-- (void)deselectedItemWithoutAnimation {
-    self.rate = 0;
-    _selected = NO;
 }
 
 - (void)setSelectedColor:(UIColor *)selectedColor {
@@ -105,9 +99,7 @@
     [normalColor getRed:&_normalRed green:&_normalGreen blue:&_normalBlue alpha:&_normalAlpha];
 }
 
-#pragma mark - Private Methods
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchUpInside:(id)sender {
     if ([self.delegate respondsToSelector:@selector(didPressedMenuItem:)]) {
         [self.delegate didPressedMenuItem:self];
     }
