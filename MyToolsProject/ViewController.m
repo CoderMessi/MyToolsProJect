@@ -65,7 +65,6 @@
     [collection registerClass:[CollectionHeaderCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"CollectionHeaderCollectionReusableView"];
 }
 
-
 //指纹解锁
 - (void)testFingerPrint {
     //需要导入头文件<LocalAuthentication/LAContext.h>
