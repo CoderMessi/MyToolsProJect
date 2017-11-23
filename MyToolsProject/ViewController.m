@@ -25,7 +25,7 @@
 #import <mach/vm_statistics.h>
 #import <sys/mount.h>
 
-@interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TZImagePickerControllerDelegate>
+@interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TZImagePickerControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @end
 
@@ -37,11 +37,91 @@
     self.view.backgroundColor = [UIColor hx_colorWithHexRGBAString:@"000000" alpha:1];
     self.view.backgroundColor = HexColor(@"ffffff", 0.5);
     
-    [self getAvailableDiskSize];
-    [self getTotalDiskSize];
-    [self getDictionarySize];
+//    [self getAvailableDiskSize];
+//    [self getTotalDiskSize];
+//    [self getDictionarySize];
+    
+    [self initTableView];
 }
 
+- (void)initTableView {
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    [self.view  addSubview:tableView];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 9;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    }
+    
+    switch (indexPath.row) {
+        case 0:
+            cell.textLabel.text = @"测试弹幕";
+            break;
+        case 1:
+            cell.textLabel.text = @"测试指纹解锁";
+            break;
+        case 2:
+            cell.textLabel.text = @"测试播放器";
+            break;
+        case 3:
+            cell.textLabel.text = @"测试测试蓝牙";
+            break;
+        case 4:
+            cell.textLabel.text = @"测试下载";
+            break;
+        case 5:
+            cell.textLabel.text = @"测试扫码";
+            break;
+        case 6:
+            cell.textLabel.text = @"手机磁盘容量";
+            break;
+        case 7:
+            cell.textLabel.text = @"磁盘可用容量";
+            break;
+        case 8:
+            cell.textLabel.text = @"打印磁盘容量";
+            break;
+            
+        default:
+            break;
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        [self testBarrageView];
+    } else if (indexPath.row == 1) {
+        [self testFingerPrint];
+    } else if (indexPath.row == 2) {
+        [self testPlayer];
+    } else if (indexPath.row == 3) {
+        [self testBluetooth];
+    } else if (indexPath.row == 4) {
+        [self testDownload];
+    } else if (indexPath.row == 5) {
+        [self testScanCode];
+    } else if (indexPath.row == 6) {
+        
+        [self getTotalDiskSize];
+        
+        
+    } else if (indexPath.row == 7) {
+        
+        [self getAvailableDiskSize];
+        
+    } else if (indexPath.row == 8) {
+        [self getDictionarySize];
+    }
+}
 
 #pragma mark - test something
 - (void)testBarrageView {
@@ -187,7 +267,7 @@
     
 }
 
-- (void)getTotalDiskSize {
+- (NSString *)getTotalDiskSize {
     struct statfs buf;
     NSUInteger freeSpace = -1;
     if (statfs("/var", &buf) >= 0) {
@@ -196,9 +276,10 @@
     
     NSString *sizeString = [self fileSizeToString:freeSpace];
     NSLog(@"总磁盘容量>>>>>>>>%@", sizeString);
+    return sizeString;
 }
 
-- (void)getAvailableDiskSize {
+- (NSString *)getAvailableDiskSize {
     struct statfs buf;
     NSUInteger freeSpace = -1;
     if (statfs("/var", &buf) >= 0) {
@@ -207,6 +288,7 @@
     
     NSString *sizeString = [self fileSizeToString:freeSpace];
     NSLog(@"可用磁盘容量>>>>>>>>>>>%@",sizeString);
+    return sizeString;
 }
 
 - (void)getDictionarySize {
